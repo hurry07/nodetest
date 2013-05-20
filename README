@@ -1,1 +1,8 @@
 This file was created by JetBrains WebStorm 6.0.1 for binding GitHub repository
+
+this project require express and jade modules, make sure them were installed with:
+npm install -g express
+npm install -g jade
+
+add Environment Variables NODE_PATH=/your/node/modules/path:$NODE_PATH
+run app.js with node
