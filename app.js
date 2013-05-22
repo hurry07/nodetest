@@ -32,7 +32,17 @@ if ('development' == app.get('env')) {
 //app.get('/', routes.index);
 //app.get('/users', user.list);
 //app.get('/', express.static(path.join(__dirname)));
-//app.get('/index.html', express.static('index.html'));
+
+
+var r = require('rethinkdb');
+
+// init database
+var init = require('./dbinit/init');
+init.init(r);
+
+// bind db service
+var db = new (require('./dbinit/querys'))(r);
+app.get('/db', db.queryTables);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
