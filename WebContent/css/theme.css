@@ -1,0 +1,363 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background: #404040;
+    overflow: hidden;
+}
+
+path {
+    fill: none;
+}
+
+/* ======================= */
+/* focus style             */
+/* ======================= */
+.focus {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.entity .table.focus {
+    filter: none;
+}
+
+.link.focus .curve {
+    filter: none;
+}
+
+/* ======================= */
+/* table view              */
+/* ======================= */
+/* row */
+.tabledata .row:nth-child(odd) {
+    fill: #A7B6C7;
+}
+
+.tabledata .row:nth-child(even) {
+    fill: #F3F6FA;
+}
+
+.cell text {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    fill: black;
+    text-anchor: start;
+    font-size: 17px;
+}
+
+/* header */
+.tabledata .header {
+    fill: #809bc8;
+}
+
+.split .line {
+    fill: black;
+    stroke: transparent;
+}
+
+.split .block {
+    fill: #FC9C9C;
+}
+
+/* ======================= */
+/* link styles             */
+/* ======================= */
+.link .curve {
+    stroke: #FC9C9C;
+    stroke-width: 2px;
+    filter: url(#dropshadow);
+}
+
+.link .start, .link .end {
+    fill: #CBFF00;
+    stroke: #8E9A8E;
+    stroke-width: 2px;
+}
+
+.link.focus .curve {
+    stroke: #FC9C9C;
+}
+
+.link.focus .start {
+    fill: #A0FF00;
+}
+
+.entity text {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+}
+
+.entity text.input {
+    fill: transparent
+}
+
+.textedit {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    height: 100%;
+    width: 100%;
+    text-indent: 4px;
+}
+
+.entity .field:nth-child(odd) {
+    fill: #B1BBC4;
+}
+
+.entity .field:nth-child(even) {
+    fill: #A7B6C7;
+}
+
+.entity .table {
+    filter: url(#dropshadow);
+}
+
+.entity g.edit rect {
+    fill: #809bc8;
+}
+
+.entity g.edit text {
+    fill: transparent;
+}
+
+.entity .fieldname {
+    fill: black;
+    text-anchor: start;
+    font-size: 17px;
+}
+
+.entity .bg {
+    fill: #959595;
+}
+
+.map .header {
+    fill: #5581A2;
+}
+
+.map .headername {
+    fill: black;
+    text-anchor: start;
+    font-size: 24px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.map .footer {
+    fill: #5581A2;
+}
+
+.view .bg {
+    fill: #959595;
+}
+
+.view .header {
+    fill: #28643F;
+}
+
+.view .headername {
+    fill: white;
+    text-anchor: start;
+    font-size: 24px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.view .fields {
+    fill: #B1BBC4;
+}
+
+.view .footer {
+    fill: #28643F;
+}
+
+.floating {
+    position: fixed;
+    z-index: 99;
+    cursor: pointer;
+    border: 0px;
+    overflow: hidden;
+    display: block;
+    padding: 0px;
+}
+
+.floating input {
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+    outline-width: 0px;
+}
+
+/* right click menu */
+.menu .background {
+    filter: url(#dropshadow);
+}
+
+.menu g.item {
+    fill: #EEEEEE;
+}
+
+.menu g.item:hover {
+    fill: #1EB5E7;
+}
+
+.menu g.item:hover text {
+    fill: white;
+}
+
+.menu .split {
+    fill: #EEEEEE;
+}
+
+.menu text {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    text-anchor: start;
+    font-size: 15px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    fill: black;
+}
+
+.entity text.type {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    text-anchor: end;
+    font-size: 45px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    fill: black;
+}
+
+.menu path {
+    stroke: #CCCCCC;
+}
+
+/*
+g.comp:nth-child(odd) {
+    fill: #B1BBC4;
+}
+g.comp:nth-child(even) {
+    fill: #A7B6C7;
+}
+
+component menu styles
+*/
+.pPanel .classes > .bg {
+    fill: #E6E6E6;
+}
+
+.pPanel .comp .topline {
+    stroke: #CCCCCC;
+    stroke-width: 0.1px;
+}
+
+.pPanel .comp text {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    text-anchor: start;
+    font-size: 18px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    fill: black;
+}
+
+/* component font colors */
+.pPanel .comp rect {
+    fill: #EEF4F9;
+}
+
+.pPanel .comp:hover rect {
+    fill: #0067B3;
+}
+
+.pPanel .comp:hover text {
+    fill: white;
+}
+
+.pPanel .comp:hover tspan {
+    fill: white;
+}
+
+.pPanel .comp:hover tspan.light {
+    fill: white;
+}
+
+.pPanel .comp tspan {
+    fill: #5E6288;
+}
+
+.pPanel .comp tspan.light {
+    fill: #C02DBE;
+}
+
+/* expand control */
+.pPanel .comps .comp.show {
+    visibility: visible;
+}
+
+.pPanel .comps .comp.hide {
+    visibility: hidden;
+}
+
+.pPanel .comps.fold .comp.show {
+    visibility: hidden;
+}
+
+/* component title */
+.pPanel .expand rect {
+    fill: #D9D9D9;
+}
+
+.pPanel .expand text {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    text-anchor: start;
+    font-size: 22px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    fill: black;
+    text-anchor: middle;
+}
+
+.pPanel .expand .topline {
+    stroke: black;
+    stroke-width: 2px;
+}
+
+/* component search box */
+.pPanel .search .bg {
+    fill: #E6E6E6;
+}
+
+.pPanel .search .inputbg {
+    fill: white;
+}
+
+.pPanel .search text {
+    font-family: "Myriad Pro", Helvetica, Arial, sans-serif;
+    text-anchor: start;
+    font-size: 22px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    fill: black;
+    text-anchor: start;
+}
+
+.pPanel .search .button {
+    fill: green;
+}
+
+/* this tool panel's title */
+.pPanel .title {
+    fill: #393939;
+}

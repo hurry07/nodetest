@@ -1,0 +1,42 @@
+{
+    "entities" : {
+        "tables": [{
+            "type":"map",
+            "position": {"x": 100, "y": 100},
+            "name":"first",
+            "fields" : [
+                {"name":"name", "type":"s"},
+                {"name":"width", "type":"i"},
+                {"name":"percent", "type":"f"},
+                {"name":"price", "type":"f"},
+                {"name":"second", "type":"r"}
+            ]
+        },{
+            "type":"map",
+            "position": {"x": 300, "y": 10},
+            "name":"second",
+            "fields" : [
+                {"name":"name", "type":"s"},
+                {"name":"width", "type":"i"},
+                {"name":"percent", "type":"f"},
+                {"name":"price", "type":"f"}
+            ]
+        },{
+            "type":"map",
+            "position": {"x": 300, "y": 200},
+            "name":"third",
+            "fields" : [
+                {"name":"aadd", "type":"s"},
+                {"name":"width", "type":"i"},
+                {"name":"percent", "type":"f"},
+                {"name":"price", "type":"f"}
+            ]
+        }],
+        "links": [
+            {"type":"single","start":"first", "end":"third"},
+            {"type":"single","start":"first.width", "end":"second.name"},
+            {"type":"single","start":"first.price", "end":"second.price"},
+            {"type":"single","start":"second.percent", "end":"third.price"}
+        ]
+    }
+}
