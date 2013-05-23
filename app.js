@@ -9,6 +9,9 @@ var express = require('express')
 
 var db = require('rethinkdb');
 
+var utils = require('./utils/extends');
+console.log('utils', utils);
+
 var app = express();
 
 // all environments

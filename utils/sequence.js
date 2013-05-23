@@ -19,7 +19,7 @@ sequence.prototype.task = function (fn, bind, params) {
     }
     this.tasks.push({fn: fn, bind: bind, params: params});
 }
-sequence.prototype._param = function (name) {
+sequence.prototype.param_ = function (name) {
     delete this.context[name];
 }
 sequence.prototype.param = function (name, value) {
@@ -29,22 +29,22 @@ sequence.prototype.param = function (name, value) {
         this.context[name] = value;
     }
 }
+sequence.prototype.next = function () {
+    this.index++;
+    this.start();
+}
 sequence.prototype.stop = function () {
     this.index = this.tasks.length;
 }
 sequence.prototype.start = function () {
-    while (this.index < this.tasks.length) {
+    if (this.index < this.tasks.length) {
         var task = this.tasks[this.index];
         var params = [];
         for (var i = 0, names = task.params, len = names.length; i < len; i++) {
             params.push(this.context[names[i]]);
         }
-        params.push(this);
-
-        var i = this.index;
         task.fn.apply(task.bind || this, params);
-        if (i == this.index) {
-            this.index++;
-        }
     }
 }
+
+module.exports = sequence;
