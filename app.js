@@ -38,7 +38,7 @@ var r = require('rethinkdb');
 
 // init database
 var init = require('./dbinit/init');
-init.init(r);
+init.create(r).connect('localhost', 28015, 'blockdb').start();
 
 // bind db service
 var db = new (require('./dbinit/querys'))(r);
