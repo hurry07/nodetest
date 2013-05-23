@@ -29,7 +29,7 @@ function dbAdapter(r) {
     this.task(this.createDB, this, 'dblist', 'conn');
     this.task(this.listTables, this, 'conn');
     this.task(this.createTables, this, 'tables', 'conn');
-    this.task(this.endInit, this);
+    this.task(this.close, this, 'conn');
 }
 extend.extend(dbAdapter, sequence);
 /**
@@ -97,10 +97,10 @@ dbAdapter.prototype.createTables = function (tables, conn) {
     console.log('createTables >');
     var col = new collect(tables);
     var tables = [
-        {name: 'a1'},
-        {name: 'a2'},
-        {name: 'a3'},
-        {name: 'a4'}
+        {name: 'module'},
+        {name: 'table'},
+        {name: 'link'},
+        {name: 'data'}
     ];
 
     var seq = this;
@@ -137,8 +137,9 @@ dbAdapter.prototype.createTables = function (tables, conn) {
         this.next();
     }
 }
-dbAdapter.prototype.endInit = function () {
-    console.log('dbAdapter.prototype.endInit >');
+dbAdapter.prototype.close = function (conn) {
+    conn.close();
+    this.next();
 }
 exports.create = function (r) {
     var a = new dbAdapter(r);

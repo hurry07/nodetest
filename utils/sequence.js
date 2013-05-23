@@ -31,20 +31,39 @@ sequence.prototype.param = function (name, value) {
 }
 sequence.prototype.next = function () {
     this.index++;
-    this.start();
+    console.log('next ->', this.index, this.tasks.length);
+
+    var seq = this;
+    process.nextTick(function () {
+        seq.start();
+    });
 }
 sequence.prototype.stop = function () {
     this.index = this.tasks.length;
 }
 sequence.prototype.start = function () {
-    if (this.index < this.tasks.length) {
-        var task = this.tasks[this.index];
-        var params = [];
-        for (var i = 0, names = task.params, len = names.length; i < len; i++) {
-            params.push(this.context[names[i]]);
+    if (this.index == this.tasks.length) {
+        console.log('start ---->', this.index, this.tasks.length);
+        var trigger = this.endTrigger;
+        if (trigger) {
+            this.run(trigger);
         }
-        task.fn.apply(task.bind || this, params);
+        return;
     }
+    if (this.index < this.tasks.length) {
+        this.run(this.tasks[this.index]);
+    }
+}
+sequence.prototype.run = function (task) {
+    var params = [];
+    for (var i = 0, names = task.params || [], len = names.length; i < len; i++) {
+        params.push(this.context[names[i]]);
+    }
+    task.fn.apply(task.bind || this, params);
+}
+sequence.prototype.trigger = function (fn, bind, params) {
+    this.endTrigger = {fn: fn, bind: bind, params: params};
+    return this;
 }
 
 module.exports = sequence;
