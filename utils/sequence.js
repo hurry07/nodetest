@@ -29,6 +29,16 @@ sequence.prototype.param = function (name, value) {
         this.context[name] = value;
     }
 }
+sequence.prototype.prepare = function () {
+    var names = Array.prototype.slice.call(arguments, 0);
+    var seq = this;
+    return function () {
+        for (var i = 0, len = names.length; i < len; i++) {
+            seq.param(names[i], arguments[i]);
+        }
+        seq.next();
+    }
+}
 sequence.prototype.next = function () {
     this.index++;
     console.log('next ->', this.index, this.tasks.length);

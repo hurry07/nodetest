@@ -73,7 +73,7 @@ dbAdapter.prototype.connect = function (host, port, db) {
 dbAdapter.prototype.listDB = function (conn) {
     var r = this.r;
     var db = this.connect.db;
-    r.dbList().run(conn, this.callback('!err', 'dblist'));
+    r.dbList().run(conn, this.prepare('err', 'dblist'));
 }
 dbAdapter.prototype.createDB = function (dblist, conn) {
     var db = this.connect.db;
@@ -82,7 +82,7 @@ dbAdapter.prototype.createDB = function (dblist, conn) {
         console.info('dbCreate directly:');
         this.next();
     } else {
-        this.r.dbCreate(db).run(conn, this.callback('!err'));
+        this.r.dbCreate(db).run(conn, this.prepare('err'));
     }
 }
 /**
@@ -91,7 +91,7 @@ dbAdapter.prototype.createDB = function (dblist, conn) {
 dbAdapter.prototype.listTables = function (conn) {
     console.log('listTables');
     var db = this.connect.db;
-    this.r.db(db).tableList().run(conn, this.callback('!err', 'tables'));
+    this.r.db(db).tableList().run(conn, this.prepare('err', 'tables'));
 }
 dbAdapter.prototype.createTables = function (tables, conn) {
     console.log('createTables >');
