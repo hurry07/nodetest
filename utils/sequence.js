@@ -18,6 +18,7 @@ sequence.prototype.task = function (fn, bind, params) {
         params = Array.prototype.slice.call(arguments, 2);
     }
     this.tasks.push({fn: fn, bind: bind, params: params});
+    return this;
 }
 sequence.prototype.param_ = function (name) {
     delete this.context[name];
@@ -29,7 +30,11 @@ sequence.prototype.param = function (name, value) {
         this.context[name] = value;
     }
 }
-sequence.prototype.prepare = function () {
+/**
+ * collect param and call next task
+ * @returns {Function}
+ */
+sequence.prototype.callback = function () {
     var names = Array.prototype.slice.call(arguments, 0);
     var seq = this;
     return function () {
@@ -52,14 +57,6 @@ sequence.prototype.stop = function () {
     this.index = this.tasks.length;
 }
 sequence.prototype.start = function () {
-    if (this.index == this.tasks.length) {
-        console.log('start ---->', this.index, this.tasks.length);
-        var trigger = this.endTrigger;
-        if (trigger) {
-            this.run(trigger);
-        }
-        return;
-    }
     if (this.index < this.tasks.length) {
         this.run(this.tasks[this.index]);
     }
@@ -71,9 +68,22 @@ sequence.prototype.run = function (task) {
     }
     task.fn.apply(task.bind || this, params);
 }
-sequence.prototype.trigger = function (fn, bind, params) {
-    this.endTrigger = {fn: fn, bind: bind, params: params};
-    return this;
+/**
+ * return a count down object with a finally function fn
+ *
+ * @param count total count
+ * @param fn called when finally
+ * @param bind fn binding context
+ * @returns {{tick: Function}}
+ */
+function counter(count, fn, bind) {
+    return {
+        tick: function () {
+            if (--count == 0) {
+                fn.call(bind || this);
+            }
+        }
+    }
 }
-
 module.exports = sequence;
+module.exports.counter = counter;

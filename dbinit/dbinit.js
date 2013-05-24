@@ -1,24 +1,5 @@
 var extend = require('../utils/extends');
-
-function collect(array) {
-    this.array = array;
-}
-collect.prototype.has = function (name) {
-    for (var i = 0, len = this.array.length; i < len; i++) {
-        if (this.array[i] == name) {
-            return true;
-        }
-    }
-    return false;
-}
-collect.prototype.add = function (name) {
-    this.array.push(name);
-}
-collect.prototype.each = function (fn, bind) {
-    for (var i = 0, len = this.array.length; i < len; i++) {
-        fn.call(bind || this.array, this.array[i], i);
-    }
-}
+var miscellaneous = require('../utils/miscellaneous');
 
 var sequence = require('../utils/sequence');
 function dbAdapter(r) {
@@ -32,25 +13,6 @@ function dbAdapter(r) {
     this.task(this.close, this, 'conn');
 }
 extend.extend(dbAdapter, sequence);
-/**
- * save params by name form current context
- * @returns {Function}
- */
-dbAdapter.prototype.callback = function () {
-    var names = Array.prototype.slice.call(arguments, 0);
-    var seq = this;
-    return function () {
-        for (var i = 0, len = names.length; i < len; i++) {
-            var n = names[i];
-            if (n.indexOf('!') == 0 && arguments[i]) {
-                seq.stop();
-                return;
-            }
-            seq.param(n, arguments[i]);
-        }
-        seq.next();
-    }
-}
 dbAdapter.prototype.checkError = function () {
     console.log('dbAdapter.prototype.checkError');
     if (this.param('err')) {
@@ -73,16 +35,16 @@ dbAdapter.prototype.connect = function (host, port, db) {
 dbAdapter.prototype.listDB = function (conn) {
     var r = this.r;
     var db = this.connect.db;
-    r.dbList().run(conn, this.prepare('err', 'dblist'));
+    r.dbList().run(conn, this.callback('err', 'dblist'));
 }
 dbAdapter.prototype.createDB = function (dblist, conn) {
     var db = this.connect.db;
-    var col = new collect(dblist);
+    var col = miscellaneous.createlist(dblist);
     if (col.has(db)) {
         console.info('dbCreate directly:');
         this.next();
     } else {
-        this.r.dbCreate(db).run(conn, this.prepare('err'));
+        this.r.dbCreate(db).run(conn, this.callback('err'));
     }
 }
 /**
@@ -91,11 +53,11 @@ dbAdapter.prototype.createDB = function (dblist, conn) {
 dbAdapter.prototype.listTables = function (conn) {
     console.log('listTables');
     var db = this.connect.db;
-    this.r.db(db).tableList().run(conn, this.prepare('err', 'tables'));
+    this.r.db(db).tableList().run(conn, this.callback('err', 'tables'));
 }
 dbAdapter.prototype.createTables = function (tables, conn) {
     console.log('createTables >');
-    var col = new collect(tables);
+    var col = miscellaneous.createlist(tables);
     var tables = [
         {name: 'module'},
         {name: 'table'},
@@ -103,39 +65,25 @@ dbAdapter.prototype.createTables = function (tables, conn) {
         {name: 'data'}
     ];
 
-    var seq = this;
-    var callback = function (err, message) {
-        console.log(arguments);
-        if (err) {
-            seq.stop();
-        } else {
-            waiting--;
-        }
-        if (waiting == 0) {
-            console.log('all table created inner');
-            seq.next();
-        }
-    }
-    var waiting = tables.length;
     var db = this.connect.db;
-    for (var i = 0; i < tables.length; i++) {
-        var table = tables[i];
+    var r = this.r;
+
+    // do next step when all table was created successfully
+    miscellaneous.each(tables, function (table) {
         if (col.has(table.name)) {
             console.info('dbCreate directly:');
-            waiting--;
+            this.tick();
         } else {
             col.add(table.name);
             if (table.param) {
-                this.r.db(db).tableCreate(table.name, table.param).run(conn, callback);
+                r.db(db).tableCreate(table.name, table.param).run(conn, this.tick);
             } else {
-                this.r.db(db).tableCreate(table.name).run(conn, callback);
+                r.db(db).tableCreate(table.name).run(conn, this.tick);
             }
         }
-    }
-    if (waiting == 0) {
-        console.log('all table created');
+    }, sequence.counter(tables.length, function () {
         this.next();
-    }
+    }, this));
 }
 dbAdapter.prototype.close = function (conn) {
     conn.close();

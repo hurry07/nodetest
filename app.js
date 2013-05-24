@@ -37,13 +37,13 @@ if ('development' == app.get('env')) {
 //app.get('/', express.static(path.join(__dirname)));
 
 // bind db service
-var db = new (require('./dbinit/querys'))(r);
-app.get('/db', db.queryTables);
+var db = new (require('./dbinit/dbservice'))(r);
+app.get('/db', db.serve);
 
 // init database
 var r = require('rethinkdb');
-var init = require('./dbinit/init');
-init.create(r).connect('localhost', 28015, 'blockdb').trigger(function () {
+var init = require('./dbinit/dbinit');
+init.create(r).connect('localhost', 28015, 'blockdb').task(function () {
     console.log('all ends');
     http.createServer(app).listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));
