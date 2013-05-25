@@ -14,7 +14,8 @@
     <script type="text/javascript" src="js/sprintf.js"></script>
     <script type="text/javascript" src="js/core/utils.js"></script>
     <script type="text/javascript" src="js/config/menus.js"></script>
-    <script type="text/javascript" src="js/core/dom.js"></script>
+    <script type="text/javascript" src="js/core/block.js"></script>
+    <script type="text/javascript" src="js/core/connect.js"></script>
     <script type="text/javascript" src="js/core/node.js"></script>
     <script type="text/javascript" src="js/core/listnode.js"></script>
     <!-- window component -->
@@ -127,7 +128,11 @@
     // binding data
     // ==========================
     d3.json('res/data.json', function (data) {
+        console.log('data.json', arguments);
         uiMgr.bindDatas(data);
+    });
+    block.send('/db', {a: 11}, function () {
+        console.log('block.send', arguments);
     });
 
     // ==========================

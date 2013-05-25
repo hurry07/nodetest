@@ -18,12 +18,16 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.use(express.cookieParser());
+//app.use(express.bodyParser());
 app.use(app.router);
 app.use(express.static('WebContent'));
+
 //app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
@@ -38,7 +42,7 @@ if ('development' == app.get('env')) {
 
 // bind db service
 var db = new (require('./dbinit/dbservice'))(r);
-app.get('/db', db.serve);
+app.post('/db', express.bodyParser(), db.serve);
 
 // init database
 var r = require('rethinkdb');

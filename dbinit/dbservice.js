@@ -6,7 +6,7 @@ dbService.prototype.queryTables = function (req, res) {
     res.json({ready: 'OK'});
 }
 dbService.prototype.serve = function (req, res) {
-    console.log('execute query');
+    console.log('execute query', req.body);
     res.json({ready: 'OK'});
 }
 module.exports = dbService;
