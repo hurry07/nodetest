@@ -6,7 +6,15 @@ dbService.prototype.queryTables = function (req, res) {
     res.json({ready: 'OK'});
 }
 dbService.prototype.serve = function (req, res) {
+    var body = req.body;
+    var table = body.table;
+    var id = body.id;
+    if (!body.id) {
+
+    }
     console.log('execute query', req.body);
-    res.json({ready: 'OK'});
+    res.json({status: 'OK'});
 }
-module.exports = dbService;
+exports.create = function (dbconf) {
+    return new dbService(dbconf);
+};

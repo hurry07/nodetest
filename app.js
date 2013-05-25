@@ -40,14 +40,15 @@ if ('development' == app.get('env')) {
 //app.get('/users', user.list);
 //app.get('/', express.static(path.join(__dirname)));
 
-// bind db service
-var db = new (require('./dbinit/dbservice'))(r);
-app.post('/db', express.bodyParser(), db.serve);
-
-// init database
 var r = require('rethinkdb');
+var dbconf = require('./dbinit/dbconf')(r).host('localhost').port(28015).db('blockdb');
+
+var dbService = require('./dbinit/dbservice').create(dbconf);
+app.post('/db', express.bodyParser(), dbService.serve);
+
+// init database and start server
 var init = require('./dbinit/dbinit');
-init.create(r).connect('localhost', 28015, 'blockdb').task(function () {
+init.create(dbconf).connect('localhost', 28015, 'blockdb').task(function () {
     console.log('all ends');
     http.createServer(app).listen(app.get('port'), function () {
         console.log('Express server listening on port ' + app.get('port'));

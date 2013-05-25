@@ -2,9 +2,10 @@ var extend = require('../utils/extends');
 var miscellaneous = require('../utils/miscellaneous');
 
 var sequence = require('../utils/sequence');
-function dbAdapter(r) {
+function dbAdapter(dbconf) {
     sequence.call(this);
-    this.r = r;
+    this.dbconf = dbconf;
+    this.r = dbconf.getR();
     this.task(this.connectDB, this);
     this.task(this.listDB, this, 'conn');
     this.task(this.createDB, this, 'dblist', 'conn');
@@ -22,7 +23,7 @@ dbAdapter.prototype.checkError = function () {
     }
 }
 dbAdapter.prototype.connectDB = function () {
-    this.r.connect({host: 'localhost', port: 28015, db: 'blockdb'}, this.callback('!err', 'conn'));
+    this.dbconf.connect(this.callback('!err', 'conn'));
 }
 dbAdapter.prototype.connect = function (host, port, db) {
     this.connect = {host: host, port: port, db: db};
