@@ -25,21 +25,15 @@ dbAdapter.prototype.checkError = function () {
 dbAdapter.prototype.connectDB = function () {
     this.dbconf.connect(this.callback('!err', 'conn'));
 }
-dbAdapter.prototype.connect = function (host, port, db) {
-    this.connect = {host: host, port: port, db: db};
-    return this;
-}
 /**
  * create db if not exits
  * @param conn
  */
 dbAdapter.prototype.listDB = function (conn) {
-    var r = this.r;
-    var db = this.connect.db;
-    r.dbList().run(conn, this.callback('err', 'dblist'));
+    this.r.dbList().run(conn, this.callback('err', 'dblist'));
 }
 dbAdapter.prototype.createDB = function (dblist, conn) {
-    var db = this.connect.db;
+    var db = this.dbconf.db();
     var col = miscellaneous.createlist(dblist);
     if (col.has(db)) {
         console.info('dbCreate directly:');
@@ -53,8 +47,7 @@ dbAdapter.prototype.createDB = function (dblist, conn) {
  */
 dbAdapter.prototype.listTables = function (conn) {
     console.log('listTables');
-    var db = this.connect.db;
-    this.r.db(db).tableList().run(conn, this.callback('err', 'tables'));
+    this.dbconf.usedb().tableList().run(conn, this.callback('err', 'tables'));
 }
 dbAdapter.prototype.createTables = function (tables, conn) {
     console.log('createTables >');
@@ -66,8 +59,7 @@ dbAdapter.prototype.createTables = function (tables, conn) {
         {name: 'data'}
     ];
 
-    var db = this.connect.db;
-    var r = this.r;
+    var db = this.dbconf.usedb();
 
     // do next step when all table was created successfully
     miscellaneous.each(tables, function (table) {
@@ -77,9 +69,9 @@ dbAdapter.prototype.createTables = function (tables, conn) {
         } else {
             col.add(table.name);
             if (table.param) {
-                r.db(db).tableCreate(table.name, table.param).run(conn, this.tick);
+                db.tableCreate(table.name, table.param).run(conn, this.tick);
             } else {
-                r.db(db).tableCreate(table.name).run(conn, this.tick);
+                db.tableCreate(table.name).run(conn, this.tick);
             }
         }
     }, sequence.counter(tables.length, function () {

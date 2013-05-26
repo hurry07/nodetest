@@ -46,12 +46,23 @@ var dbconf = require('./dbinit/dbconf')(r).host('localhost').port(28015).db('blo
 var dbService = require('./dbinit/dbservice').create(dbconf);
 app.post('/db', express.bodyParser(), dbService.serve);
 
-// init database and start server
-var init = require('./dbinit/dbinit');
-init.create(dbconf).connect('localhost', 28015, 'blockdb').task(function () {
-    console.log('all ends');
-    http.createServer(app).listen(app.get('port'), function () {
-        console.log('Express server listening on port ' + app.get('port'));
-    });
-}).start();
+//// init database and start server
+//var init = require('./dbinit/dbinit');
+//init.create(dbconf).task(function () {
+//    console.log('all ends');
+//    http.createServer(app).listen(app.get('port'), function () {
+//        console.log('Express server listening on port ' + app.get('port'));
+//    });
+//}).start();
 
+var mongodb = require('mongodb');
+var server = new mongodb.Server('localhost', 27017, {auto_reconnect: true}, 10);
+var db = new mongodb.Db("mydb2", server, {safe: true});
+db.open(function (err, db) {
+    if (err) {
+        console.log(err);
+    }
+    if (!err) {
+        console.log("we are connected!");
+    }
+});
